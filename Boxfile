@@ -1,0 +1,44 @@
+## Pagoda Box Boxfile
+---
+web1:
+  name: vagrantphp
+  shared_writable_dirs:
+    - var/log
+  document_root: public
+  php_version: 5.3.10
+  php_extensions:
+    - apc
+    - curl
+    - ftp
+    - gd
+    - geoip
+    - imagick
+    - ldap
+    - mbstring
+    - mcrypt
+    - memcache
+    - mysql
+    - mysqli
+    - oauth
+    - pdo_mysql
+    - sockets
+  php_post_max_size: "100M"
+  php_upload_max_filesize: "100M"
+  after_build:
+    - "bin/composer install"
+  before_deploy:
+    - "bin/clearMemcache.php"
+    - "bin/doctrine.php migrations:status --configuration=application/configs/migrations.xml"
+    - "bin/doctrine.php migrations:migrate --configuration=application/configs/migrations.xml --no-interaction"
+
+db1:
+  name: vagrantphp-db
+  type: mysql
+  
+cache1:
+  name: sessions
+  type: memcached
+  
+cache2:
+  name: doctrine
+  type: memcached
