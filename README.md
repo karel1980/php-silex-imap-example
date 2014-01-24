@@ -8,3 +8,13 @@ Maak een applicatie die met behulp van het Silex microframework de inbox van een
 * Output alle emails uit de inbox met behulp van de Twig Template Engine
 * Enkel de inbox is genoeg, andere mappen mag je negeren
 
+# Gebruik
+
+* Kopieer config/dev.yml.example naar config/dev.yml
+* Pas de parameters in config/dev.yml aan
+* vagrant up
+* composer install
+
+-> http://localhost:8080
+
+

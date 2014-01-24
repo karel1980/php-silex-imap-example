@@ -24,7 +24,6 @@ $app->get('/inbox', function () use ($app) {
     $user = $app['user'];
     $pass = $app['pass'];
 
-    var_dump($mbox);
     $stream = imap_open($mbox,$user,$pass) or die(imap_last_error());
 
     $check = imap_check($stream);
