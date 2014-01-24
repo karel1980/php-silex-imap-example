@@ -1,1 +1,2 @@
+SetEnv APP_ENV dev
 FallbackResource /index.php

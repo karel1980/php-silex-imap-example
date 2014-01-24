@@ -1,0 +1,9 @@
+<!doctype html>
+<html>
+  <h2># emails: {{ emails|length }}</h2>
+  <div>
+    {% for email in emails %}
+      <li>{{ email.subject }}</li>
+    {% endfor %}
+  </div>
+</html>
