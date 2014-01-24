@@ -8,29 +8,23 @@ use Symfony\Component\Config\FileLocator;
 
 $app = new Silex\Application();
 
-$app['debug'] = true;
-
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../views'
 ));
+
+$env = getenv('APP_ENV') ?: 'prod';
+$app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__."/../config/$env.yml"));
 
 $app->get('/', function () use ($app) {
     return $app['twig']->render('index.html');
 });
 
 $app->get('/inbox', function () use ($app) {
-    $mbox = '{imap.gmail.com:993/imap/ssl}';
-    $user = 'karel@vervaeke.info';
-    $pass = 'secret';
+    $mbox = $app['mbox'];
+    $user = $app['user'];
+    $pass = $app['pass'];
 
-    /* Work in progress; Get mbox, user and pass from a yaml file
-    $configDirectories = array(__DIR__.'/../config');
-    $locator = new FileLocator($configDirectories);
-    $loader = new YamlFileLoader($sc, $locator);
-    $config = $loader->load('dev.yml');
-    var_dump($config);
-     */
-
+    var_dump($mbox);
     $stream = imap_open($mbox,$user,$pass) or die(imap_last_error());
 
     $check = imap_check($stream);
