@@ -1,4 +1,0 @@
----
-mbox: "{imap.gmail.com:993/imap/ssl}"
-user: karel@vervaeke.info
-pass: secret

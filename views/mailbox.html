@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
   <h2># emails: {{ emails|length }}</h2>
+  <a href="/logout">Sign out</a>
   <div>
     {% for email in emails %}
       <li>{{ email.subject }}</li>

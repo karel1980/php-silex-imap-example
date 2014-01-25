@@ -10,11 +10,8 @@ Maak een applicatie die met behulp van het Silex microframework de inbox van een
 
 # Gebruik
 
-* Kopieer config/dev.yml.example naar config/dev.yml
-* Pas de parameters in config/dev.yml aan
 * vagrant up
 * composer install
 
 -> http://localhost:8080
-
 
