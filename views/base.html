@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block head %}
+            <link rel="stylesheet" href="style.css" />
+            <title>{% block title %}{% endblock %} - Imap Inbox Checker</title>
+        {% endblock %}
+    </head>
+    <body>
+        <div id="header">
+            {% block header %}
+              <h1>Imap Inbox Viewer</h1></div>
+            {% endblock %}
+        <div id="content">{% block content %}{% endblock %}</div>
+        <div id="footer">
+            {% block footer %}
+                <a href="/settings">Edit settings</a> |
+                <a href="/inbox">Go to inbox</a>
+            {% endblock %}
+        </div>
+    </body>
+</html>

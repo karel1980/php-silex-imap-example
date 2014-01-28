@@ -1,20 +1,27 @@
-<!doctype html>
-<html>
-  <style>
-    input
-    {
-      display:block;
-      clear:both;
-    }
-  </style>
-  <form method="POST" action="/settings">
-    <legend>
-      <div id="settingsform">
-        <input name="host" placeholder="imap.gmail.com" value="{{ settings.host }}"/>
-        <input name="user" placeholder="karel@vervaeke.info" value="{{ settings.user }}"/>
-        <input type="password" name="pass" placeholder="****" value="{{ settings.pass }}"/>
-        <input type="submit" value="Update settings"/>
-      </div>
-    </legend>
-  </form>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Index{% endblock %}
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+        .important { color: #336699; }
+
+        input
+        {
+          display:block;
+          clear:both;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <form method="POST" action="/settings">
+      <legend>
+        <div id="settingsform">
+          <input name="host" placeholder="imap.gmail.com" value="{{ settings.host }}"/>
+          <input name="user" placeholder="karel@vervaeke.info" value="{{ settings.user }}"/>
+          <input type="password" name="pass" placeholder="****" value="{{ settings.pass }}"/>
+          <input type="submit" value="Update settings"/>
+        </div>
+      </legend>
+    </form>
+{% endblock %}

@@ -1,9 +1,15 @@
-<!doctype html>
-<html>
-  <h1>Imap inbox viewer</h1>
+{% extends "base.html" %}
 
-  <div>
-    <a href="/settings">Edit settings</a> |
-    <a href="/inbox">Go to inbox</a>
-  </div>
-</html>
+{% block title %}Index{% endblock %}
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+        .important { color: #336699; }
+    </style>
+{% endblock %}
+{% block content %}
+<pre>
+  [[ LOGO ]]
+     -- tagline
+</pre>
+{% endblock %}
