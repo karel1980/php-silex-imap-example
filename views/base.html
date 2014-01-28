@@ -2,7 +2,7 @@
 <html>
     <head>
         {% block head %}
-            <link rel="stylesheet" href="style.css" />
+            <link rel="stylesheet" href="/resources/css/style.css" />
             <title>{% block title %}{% endblock %} - Imap Inbox Checker</title>
         {% endblock %}
     </head>
@@ -10,12 +10,13 @@
         <div id="header">
             {% block header %}
               <h1>Imap Inbox Viewer</h1></div>
+              <a href="/">Home</a> |
+              <a href="/settings">Settings</a> |
+              <a href="/inbox">Inbox</a>
             {% endblock %}
         <div id="content">{% block content %}{% endblock %}</div>
         <div id="footer">
             {% block footer %}
-                <a href="/settings">Edit settings</a> |
-                <a href="/inbox">Go to inbox</a>
             {% endblock %}
         </div>
     </body>
