@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <style>
+    input
+    {
+      display:block;
+      clear:both;
+    }
+  </style>
+  <form method="POST" action="/settings">
+    <legend>
+      <div id="settingsform">
+        <input name="host" placeholder="imap.gmail.com" value="{{ settings.host }}"/>
+        <input name="user" placeholder="karel@vervaeke.info" value="{{ settings.user }}"/>
+        <input type="password" name="pass" placeholder="****" value="{{ settings.pass }}"/>
+        <input type="submit" value="Update settings"/>
+      </div>
+    </legend>
+  </form>
+</html>

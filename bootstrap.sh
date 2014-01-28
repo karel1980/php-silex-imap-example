@@ -2,7 +2,7 @@
 
 apt-get -q update
 apt-get -q -y install curl
-apt-get -q -y install php5 php5-imap
+apt-get -q -y install php5 php5-imap php-sqlite
 export DEBIAN_FRONTEND=noninteractive; apt-get -q -y install mysql-server
 apt-get -q -y install git
 apt-get -q -y install vim

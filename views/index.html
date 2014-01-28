@@ -1,23 +1,9 @@
 <!doctype html>
 <html>
-  <style>
-    input
-    {
-      display:block;
-      clear:both;
-    }
-  </style>
-  <form method="POST" action="/login">
-    <legend>
-      <div id="loginform">
-        <input name="imap_host" placeholder="imap.gmail.com"/>
-        <input name="user" placeholder="karel@vervaeke.info"/>
-        <input type="password" name="pass" placeholder="****"/>
-        <input type="submit" value="Sign in"/>
-      </div>
-      {% if message is defined %}
-      <div>{{ message|e }}</div>
-      {% endif %}
-    </legend>
-  </form>
+  <h1>Imap inbox viewer</h1>
+
+  <div>
+    <a href="/settings">Edit settings</a> |
+    <a href="/inbox">Go to inbox</a>
+  </div>
 </html>

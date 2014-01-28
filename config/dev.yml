@@ -1,2 +1,9 @@
 ---
 # app configuration for dev environment goes here
+# 
+
+dbo:
+  driver: pdo_sqlite
+#  user: dev
+#  password: dev
+  path: /tmp/mailapp.db

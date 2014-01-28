@@ -1,10 +1,15 @@
 <!doctype html>
 <html>
-  <h2># emails: {{ emails|length }}</h2>
-  <a href="/logout">Sign out</a>
   <div>
-    {% for email in emails %}
-      <li>{{ email.subject }}</li>
-    {% endfor %}
+    {% if error is defined %}
+       There appears to be a problem: {{error}}
+       <a href="/settings">Check settings</a>
+    {% endif %}
+    {% if emails is defined %}
+      <h2># emails: {{ emails|length }}</h2>
+      {% for email in emails %}
+        <li>{{ email.subject }}</li>
+      {% endfor %}
+    {% endif %}
   </div>
 </html>
