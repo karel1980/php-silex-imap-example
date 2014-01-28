@@ -10,8 +10,17 @@ Maak een applicatie die met behulp van het Silex microframework de inbox van een
 
 # Gebruik
 
-* vagrant up
-* composer install
+Op uw machine:
+
+    vagrant up
+    composer install
+    vagrant ssh
+
+Op de VM:
+
+    # Dit is een beetje ongelukkig - op de /vagrant mount kan je geen ownership wijzigen
+    cp /vagrant/mailbox.db /tmp
+    chown www-data:www-data /tmp/mailbox.db
 
 -> http://localhost:8080
 
