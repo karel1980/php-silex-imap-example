@@ -9,13 +9,13 @@
 {% endblock %}
 {% block content %}
   <div>
-    {% if error is defined %}
-       There appears to be a problem: {{error}}
+    {% if overview.error is defined %}
+       There appears to be a problem: {{overview.error}}
        <a href="/settings">Check settings</a>
     {% endif %}
-    {% if emails is defined %}
-      <h2># emails: {{ emails|length }}</h2>
-      {% for email in emails %}
+    {% if overview.mails is defined %}
+      <h2># emails: {{ overview.mails|length }}</h2>
+      {% for email in overview.mails %}
         <li>{{ email.subject }}</li>
       {% endfor %}
     {% endif %}
