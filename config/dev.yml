@@ -2,7 +2,7 @@
 # app configuration for dev environment goes here
 # 
 
-dbo:
+dbconfig:
   driver: pdo_sqlite
 #  user: dev
 #  password: dev

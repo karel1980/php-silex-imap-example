@@ -15,10 +15,13 @@ $app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__."/../config/$env.ym
 
 // Add Doctrine DBAL ServiceProvider
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
-  'db.options' => $app['dbo']
+  'db.options' => $app['dbconfig']
 ));
 
+// Mail service
 $app->register(new MailApp\MailServiceProvider(), array());
+
+// Template engine
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../views'
 ));
@@ -74,7 +77,6 @@ $app->get('/mail/{uid}/parts/{partId}', function($uid, $partId) use ($app) {
 
 $app->get('/mail/{uid}', function($uid) use ($app) {
     $result = $app['imap']->fetchByUid((int)$uid);
-    # TODO: display html in a template
     return $app['twig']->render('mail.html', $result);
 });
 

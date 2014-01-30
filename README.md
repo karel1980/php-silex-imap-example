@@ -8,19 +8,21 @@ Maak een applicatie die met behulp van het Silex microframework de inbox van een
 * Output alle emails uit de inbox met behulp van de Twig Template Engine
 * Enkel de inbox is genoeg, andere mappen mag je negeren
 
-# Gebruik
+# Getting started:
 
-Op uw machine:
-
-    vagrant up
     composer install
-    vagrant ssh
+    vagrant up
 
-Op de VM:
+go to http://localhost:8080
 
-    # Dit is een beetje ongelukkig - op de /vagrant mount kan je geen ownership wijzigen
-    cp /vagrant/mailbox.db /tmp
-    chown www-data:www-data /tmp/mailbox.db
+# NOTES:
 
--> http://localhost:8080
+Notable bad/missing/insecure parts from the top of my head:
+
+- blobstore (essentially a cache for mail part contents) never cleans up old parts.
+- hardcoded path (/tmp), should be easy to fix using the app config service
+- in the blobstore, message id and part content id are used as file paths as-is.
+- there's a bunch of TODO's and FIXME's
+- html emails are displayed as-is, against all privacy and security considerations.
+- there's a bunch of unused modules in composer.json
 
