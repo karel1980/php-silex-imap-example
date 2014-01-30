@@ -9,6 +9,7 @@ class MailServiceProvider implements ServiceProviderInterface {
 
   public function register(Application $app) {
     $this->app = $app;
+    $this->blobStore = new BlobStore("/tmp");
     $app['imap'] = $this;
   }
 
@@ -57,32 +58,56 @@ class MailServiceProvider implements ServiceProviderInterface {
     return $transport;
   }
 
+  # Note: this is all rather inefficient, a more realistic app would do some aggressive caching because mails don't change.
   public function fetchByUid($uid) {
+    #TODO: handle invalid uids
+    $collector = $this->createPartsCollector( $uid );
+
+    $mail = $this->collectParts($uid, $collector, 'processPart');
+    // display the html text with the content IDs replaced with references to the
+    // file in the webroot.
+    $htmlCleaned = \ezcMailTools::replaceContentIdRefs( $collector->htmlText, $collector->cids );
+
+    #TODO: obviously rendering html mails as-is is horribly insecure and we should
+    # do much more processing to make it safe (like stripping script tags)
+
+    return array('raw' => $mail, 'htmlCleaned' => $htmlCleaned, 'text' => $collector->text, 'headers' => $mail->headers);
+  }
+
+  public function fetchMailPart($uid, $partId) {
+    $collector = $this->createPartsCollector( $uid );
+    $mail = $this->collectParts($uid, $collector, 'processPart');
+    return array('rawpart' => $collector->parts[$partId], 'filePath' => $this->blobStore->getPath( $uid . '.' . $partId));
+  }
+
+  public function createPartsCollector( $uid ) {
+    $collector = new PartsCollector( $this->blobStore );
+    $collector->uid = $uid;
+    $collector->webDir = '/mail/' . $uid . '/parts';
+    return $collector;
+  }
+
+  /**
+   * Processes mail with given id, passing text and attachment parts to $collector->$fn;
+   */
+  public function collectParts($uid, $collector, $fn) {
     $transport = $this->getTransport();
     $uids = $transport->listUniqueIdentifiers();
 
     $lookup = array_flip($uids);
     $fetched = $transport->fetchByMessageNr($lookup[$uid]);
     $parser = new \ezcMailParser();
-    $mail = $parser->parseMail( $fetched );
+    $parsed = $parser->parseMail( $fetched );
+    $mail = $parsed[0];
 
-    #TODO: handle invalid uids
-    $collector = new collector();
-
-    $context = new \ezcMailPartWalkContext( array( $collector, 'getHtmlText') );
-
-    #collect text parts only
-    $context->filter = array( 'ezcMailText' );
+    $context = new \ezcMailPartWalkContext( array( $collector, $fn) );
+    $context->filter = array( 'ezcMailFile', 'ezcMailText' );
 
     // use walkParts() to iterate over all parts in the first parsed e-mail
     // message.
-    $mail[0]->walkParts( $context, $mail[0] );
+    $mail->walkParts( $context, $mail );
 
-    // display the html text with the content IDs replaced with references to the
-    // file in the webroot.
-    $htmlCleaned = \ezcMailTools::replaceContentIdRefs( $collector->htmlText, $collector->cids );
-
-    return array('mail' => $mail[0], 'htmlCleaned' => $htmlCleaned, 'text' => $collector->text);
+    return $mail;
   }
 
   function boot(Application $app) {
@@ -109,10 +134,34 @@ class MailSettings {
  * takes care of copying the files and registering both file parts and the HTML
  * text.
  */
-class collector
+class PartsCollector
 {
-    function getHtmlText( $context, $mailPart )
-    {
+
+    public $cids;
+    public $htmlText;
+    public $blobStore;
+    public $parts;
+    public $uid;
+    public $webDir;
+
+    function __construct( $blobStore ) {
+        $this->blobStore = $blobStore;
+    }
+
+    function processPart( $context, $mailPart ) {
+
+        // if it's a file, we copy the attachment to a new location, and
+        // register its CID with the class - attaching it to the location in
+        // which the *web server* can find the file.
+        if ( $mailPart instanceof \ezcMailFile )
+        {
+            // setup ID array with right location for each part
+            $this->cids[$mailPart->contentId] = $this->webDir . '/' . $mailPart->contentId;
+            $this->parts[$mailPart->contentId] = $mailPart;
+            $this->blobStore->store( $this->uid . '.' . $mailPart->contentId, $mailPart );
+        }
+
+
         // if we find a text part and if the sub-type is HTML (no plain text)
         // we store that in the classes' htmlText property.
         if ( $mailPart instanceof \ezcMailText )
@@ -128,4 +177,25 @@ class collector
         }
     }
 }
+
+/**
+ * Extends this class to keep track of parts, clean up old parts
+ */
+class BlobStore {
+
+    public function __construct($storageDir) {
+        $this->storageDir = $storageDir;
+    }
+
+    public function store($id, $mailPart) {
+        # TODO: We only need to copy this part if we don't already have it
+        copy($mailPart->fileName, $this->getPath($id));
+    }
+
+    public function getPath($id) {
+        # TODO: We only need to copy this part if we don't already have it
+        return $this->storageDir . '/part' . $id;
+    }
+}
+
 ?>

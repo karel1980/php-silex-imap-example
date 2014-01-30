@@ -2,8 +2,9 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-$app = new Silex\Application();
+use Symfony\Component\HttpFoundation\Response;
 
+$app = new Silex\Application();
 $app['debug'] = true;
 
 // config service
@@ -56,12 +57,25 @@ $app->get('/inbox', function () use ($app) {
     return $app['twig']->render('mailbox.html', array('overview' => $overview));
 });
 
+$app->get('/mail/{uid}/parts/{partId}', function($uid, $partId) use ($app) {
+    $result = $app['imap']->fetchMailPart((int)$uid, $partId);
+
+    $path = $result['filePath'];
+    if (!file_exists( $path )) {
+        return $app->abort(404, 'The image was not found.');
+    }
+
+    $stream = function () use ($path) {
+        readfile($path);
+    };
+
+    return $app->stream($stream, 200, array('Content-Type' => $result['rawpart']->headers['Content-Type']));
+});
+
 $app->get('/mail/{uid}', function($uid) use ($app) {
     $result = $app['imap']->fetchByUid((int)$uid);
     # TODO: display html in a template
-    return $result['htmlCleaned'];
-    # FIXME: if mail doesn't contain html part use non formatted text:
-    # return $result['text'];
+    return $app['twig']->render('mail.html', $result);
 });
 
 $app->get('/test', function () use ($app) {
