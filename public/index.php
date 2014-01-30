@@ -45,10 +45,6 @@ $app->post('/settings', function () use ($app) {
     return $app->redirect('/');
 });
 
-function handle_failed_imap_login($app) {
-    return $app['twig']->render('mailbox.html', array('error' => imap_last_error()));
-};
-
 $app->get('/inbox', function () use ($app) {
     $settings = $app['imap']->getSettings();
     $host = $settings->host;
@@ -58,6 +54,20 @@ $app->get('/inbox', function () use ($app) {
     $overview = $app['imap']->fetchOverview();
 
     return $app['twig']->render('mailbox.html', array('overview' => $overview));
+});
+
+$app->get('/mail/{uid}', function($uid) use ($app) {
+    $result = $app['imap']->fetchByUid((int)$uid);
+    # TODO: display html in a template
+    return $result['htmlCleaned'];
+    # FIXME: if mail doesn't contain html part use non formatted text:
+    # return $result['text'];
+});
+
+$app->get('/test', function () use ($app) {
+    $opts = new ezcMailImapTransportOptions();
+    $app['imap']->test();
+    return $app['twig']->render('index.html');
 });
 
 $app->run();

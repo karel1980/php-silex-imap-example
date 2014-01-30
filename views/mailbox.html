@@ -16,7 +16,7 @@
     {% if overview.mails is defined %}
       <h2># emails: {{ overview.mails|length }}</h2>
       {% for email in overview.mails %}
-        <li>{{ email.subject }}</li>
+        <li><a href="/mail/{{ email.uid }}">{{ email.subject }}</a></li>
       {% endfor %}
     {% endif %}
   </div>

@@ -23,7 +23,9 @@
         "symfony/yaml": "~2.3",
         "igorw/config-service-provider": "1.2.1",
         "doctrine/dbal": "2.2.*",
-        "swiftmailer/swiftmailer": "5.*"
+        "swiftmailer/swiftmailer": "5.*",
+        "zetacomponents/base": "1.7",
+        "zetacomponents/mail": "1.7"
     },
     "autoload": {
         "psr-4": {
